@@ -2,6 +2,7 @@
 import os
 from fastapi import FastAPI, HTTPException
 from pydantic_settings import BaseSettings
+from fastapi.middleware.cors import CORSMiddleware
 
 class Settings(BaseSettings):
     openai_api_key: str
@@ -17,6 +18,18 @@ if not settings.openai_api_key:
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/hello")
+def hello():
+    return {"message": "Hello from FastAPI"}
+
