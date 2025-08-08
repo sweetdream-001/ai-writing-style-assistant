@@ -1,5 +1,5 @@
 .PHONY: run test
 run:
-    uvicorn app.main:app --reload
+	uvicorn app.main:app --reload
 test:
-    pytest
+	pytest
