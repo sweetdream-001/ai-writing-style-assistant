@@ -2,14 +2,16 @@
 import os
 from fastapi import FastAPI, HTTPException
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 from fastapi.middleware.cors import CORSMiddleware
 
 class Settings(BaseSettings):
     openai_api_key: str
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = ConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8"
+    )
 
 settings = Settings()  # Will read .env
 
