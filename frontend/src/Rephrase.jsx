@@ -1,5 +1,28 @@
 import { useRef, useState } from "react";
 
+// Helper function to extract partial style values from incomplete JSON
+function extractPartialStyles(buffer) {
+    const styles = {};
+    
+    // Extract professional
+    const profMatch = buffer.match(/"professional":\s*"([^"]*)/);
+    if (profMatch) styles.professional = profMatch[1];
+    
+    // Extract casual
+    const casualMatch = buffer.match(/"casual":\s*"([^"]*)/);
+    if (casualMatch) styles.casual = casualMatch[1];
+    
+    // Extract polite
+    const politeMatch = buffer.match(/"polite":\s*"([^"]*)/);
+    if (politeMatch) styles.polite = politeMatch[1];
+    
+    // Extract social_media
+    const socialMatch = buffer.match(/"social_media":\s*"([^"]*)/);
+    if (socialMatch) styles.social_media = socialMatch[1];
+    
+    return Object.keys(styles).length > 0 ? styles : null;
+}
+
 export default function Rephrase() {
     const [input, setInput] = useState("");
     const [result, setResult] = useState(null);
@@ -8,19 +31,78 @@ export default function Rephrase() {
     const [isStreamingMode, setIsStreamingMode] = useState(false);
     const [streamingContent, setStreamingContent] = useState("");
     const [isActivelyStreaming, setIsActivelyStreaming] = useState(false);
+    const [streamingResult, setStreamingResult] = useState(null);
     const controllerRef = useRef(null);
 
     const onProcess = async () => {
         setError("");
         setResult(null);
         setStreamingContent("");
+        setStreamingResult(null);
 
         if (isStreamingMode) {
-            // Future: Streaming mode will be implemented here
+            // Streaming mode implementation
             setIsActivelyStreaming(true);
-            // For now, show a placeholder
-            setError("Streaming mode will be implemented in the next step");
-            setIsActivelyStreaming(false);
+            const controller = new AbortController();
+            controllerRef.current = controller;
+
+            try {
+                const res = await fetch("http://localhost:8000/api/rephrase-stream", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: input }),
+                    signal: controller.signal,
+                });
+
+                if (!res.ok) {
+                    throw new Error("Streaming request failed");
+                }
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6); // Remove 'data: ' prefix
+                            if (data.trim()) {
+                                buffer += data;
+                                setStreamingContent(buffer);
+                                
+                                // Try to parse partial JSON and extract style values
+                                try {
+                                    const parsed = JSON.parse(buffer);
+                                    setStreamingResult({
+                                        professional: parsed.professional || "",
+                                        casual: parsed.casual || "",
+                                        polite: parsed.polite || "",
+                                        social_media: parsed.social_media || ""
+                                    });
+                                } catch {
+                                    // Partial JSON, extract what we can
+                                    const partial = extractPartialStyles(buffer);
+                                    if (partial) {
+                                        setStreamingResult(partial);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                if (err.name !== "AbortError") {
+                    setError(err.message || "Streaming failed");
+                }
+            } finally {
+                setIsActivelyStreaming(false);
+            }
             return;
         }
 
@@ -154,24 +236,41 @@ export default function Rephrase() {
 
             {error && <p style={{ color: "crimson", marginTop: 12 }}>{error}</p>}
 
-            {/* Future: Streaming Progress Display */}
-            {isActivelyStreaming && streamingContent && (
+            {/* Streaming Mode Results - Show only boxes with content */}
+            {isStreamingMode && streamingResult && (
                 <div style={{ marginTop: 16 }}>
-                    <h3 style={{ marginBottom: 8, color: "#2563eb" }}>🌊 Streaming Response:</h3>
-                    <div style={{ 
-                        border: "2px solid #2563eb", 
-                        borderRadius: 8, 
-                        padding: 12, 
-                        background: "#f8fafc",
-                        fontFamily: "monospace",
-                        whiteSpace: "pre-wrap",
-                        minHeight: 60
-                    }}>
-                        {streamingContent}
-                        <span style={{ 
-                            animation: "blink 1s infinite",
-                            color: "#2563eb"
-                        }}>|</span>
+                    <h3 style={{ marginBottom: 12, color: "#2563eb" }}>
+                        🌊 {isActivelyStreaming ? "Streaming..." : "Streaming Complete"}
+                    </h3>
+                    <div style={{ display: "grid", gap: 12 }}>
+                        {streamingResult.professional && (
+                            <StreamingCard 
+                                title="Professional" 
+                                text={streamingResult.professional} 
+                                isStreaming={isActivelyStreaming}
+                            />
+                        )}
+                        {streamingResult.casual && (
+                            <StreamingCard 
+                                title="Casual" 
+                                text={streamingResult.casual} 
+                                isStreaming={isActivelyStreaming}
+                            />
+                        )}
+                        {streamingResult.polite && (
+                            <StreamingCard 
+                                title="Polite" 
+                                text={streamingResult.polite} 
+                                isStreaming={isActivelyStreaming}
+                            />
+                        )}
+                        {streamingResult.social_media && (
+                            <StreamingCard 
+                                title="Social-media" 
+                                text={streamingResult.social_media} 
+                                isStreaming={isActivelyStreaming}
+                            />
+                        )}
                     </div>
                 </div>
             )}
@@ -189,18 +288,7 @@ export default function Rephrase() {
                 </div>
             )}
 
-            {/* Streaming Mode Results (when complete) */}
-            {result && isStreamingMode && (
-                <div style={{ marginTop: 16 }}>
-                    <h3 style={{ marginBottom: 12, color: "#2563eb" }}>🌊 Streaming Complete:</h3>
-                    <div style={{ display: "grid", gap: 12 }}>
-                        <StreamingCard title="Professional" text={result.professional} />
-                        <StreamingCard title="Casual" text={result.casual} />
-                        <StreamingCard title="Polite" text={result.polite} />
-                        <StreamingCard title="Social-media" text={result.social_media} />
-                    </div>
-                </div>
-            )}
+
         </div>
     );
 }
@@ -214,7 +302,7 @@ function Card({ title, text }) {
     );
 }
 
-function StreamingCard({ title, text }) {
+function StreamingCard({ title, text, isStreaming }) {
     return (
         <div style={{ 
             border: "2px solid #2563eb", 
@@ -225,7 +313,15 @@ function StreamingCard({ title, text }) {
             <div style={{ fontWeight: 600, marginBottom: 6, color: "#2563eb" }}>
                 🌊 {title}
             </div>
-            <div>{text}</div>
+            <div>
+                {text}
+                {isStreaming && text && (
+                    <span style={{ 
+                        animation: "blink 1s infinite",
+                        color: "#2563eb"
+                    }}>|</span>
+                )}
+            </div>
         </div>
     );
 }
