@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 load_dotenv('../.env')
 
 
+@pytest.mark.asyncio
 async def test_streaming():
     """Test the streaming rephrase function."""
     if not os.getenv("OPENAI_API_KEY"):

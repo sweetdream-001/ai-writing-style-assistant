@@ -6,8 +6,10 @@ Make sure the server is running with: make dev
 import httpx
 import asyncio
 import json
+import pytest
 
 
+@pytest.mark.asyncio
 async def test_streaming_endpoint():
     """Test the streaming endpoint with httpx."""
     
