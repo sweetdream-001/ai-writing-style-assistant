@@ -74,3 +74,39 @@ async def rephrase(text: str) -> Dict[str, str]:
         raise LLMError("Model returned invalid JSON.") from e
     except Exception as e:
         raise LLMError(f"Unexpected LLM error: {e.__class__.__name__}") from e
+
+
+async def rephrase_stream(text: str):
+    """
+    Stream the rephrase response in real-time.
+    Yields JSON chunks as they arrive from OpenAI.
+    """
+    cleaned = (text or "").strip()
+    if not cleaned:
+        raise LLMError("Input text is empty.")
+    
+    try:
+        stream = await _client().chat.completions.create(
+            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that rephrases text in different styles."},
+                {"role": "user", "content": _PROMPT.format(text=cleaned)}
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.7,
+            stream=True,
+        )
+        
+        # Yield each chunk as it arrives
+        async for chunk in stream:
+            if chunk.choices[0].delta.content:
+                yield chunk.choices[0].delta.content
+                
+    except openai.APITimeoutError as e:
+        raise LLMError("The LLM request timed out.") from e
+    except openai.APIConnectionError as e:
+        raise LLMError("Network problem reaching the LLM provider.") from e
+    except openai.APIStatusError as e:
+        raise LLMError(f"LLM request failed with status {e.status_code}.") from e
+    except Exception as e:
+        raise LLMError(f"Unexpected LLM error: {e.__class__.__name__}") from e

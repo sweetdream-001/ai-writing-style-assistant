@@ -1,5 +1,5 @@
 # AI Writing Style Assistant - Backend Makefile
-.PHONY: help install install-dev run dev test test-verbose test-integration test-integration-simple test-unit test-all clean lint format check setup env health
+.PHONY: help install install-dev run dev test test-verbose test-integration test-integration-simple test-streaming test-unit test-all clean lint format check setup env health
 
 # Default target
 help:
@@ -19,6 +19,7 @@ help:
 	@echo "  test-verbose   - Run unit tests with verbose output"
 	@echo "  test-unit      - Run unit tests only (excluding integration)"
 	@echo "  test-integration - Run integration tests (requires API key)"
+	@echo "  test-streaming - Test streaming functionality (requires API key)"
 	@echo "  test-all       - Run all tests including integration"
 	@echo ""
 	@echo "Code Quality:"
@@ -81,7 +82,15 @@ test-integration:
 
 test-integration-simple:
 	@if [ -f .env ]; then \
-		python run_integration_test.py; \
+		cd tests && python run_integration_test.py; \
+	else \
+		echo "❌ .env file not found. Run 'make env' first and add your API key"; \
+	fi
+
+test-streaming:
+	@if [ -f .env ]; then \
+		echo "🌊 Testing streaming functionality..."; \
+		cd tests && python test_streaming.py; \
 	else \
 		echo "❌ .env file not found. Run 'make env' first and add your API key"; \
 	fi

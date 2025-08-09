@@ -61,9 +61,10 @@ async def test_rephrase_whitespace_input():
 async def test_rephrase_api_timeout_error(mock_client):
     """Test handling of API timeout errors."""
     from openai import APITimeoutError
+    from unittest.mock import AsyncMock
     
-    # Mock the client to raise a timeout error
-    mock_client.return_value.chat.completions.create.side_effect = APITimeoutError("Timeout")
+    # Mock the client to raise a timeout error (no message parameter for newer versions)
+    mock_client.return_value.chat.completions.create = AsyncMock(side_effect=APITimeoutError(request=None))
     
     with pytest.raises(LLMError, match="The LLM request timed out"):
         await rephrase("Test text")
@@ -74,9 +75,10 @@ async def test_rephrase_api_timeout_error(mock_client):
 async def test_rephrase_api_connection_error(mock_client):
     """Test handling of API connection errors."""
     from openai import APIConnectionError
+    from unittest.mock import AsyncMock
     
-    # Mock the client to raise a connection error
-    mock_client.return_value.chat.completions.create.side_effect = APIConnectionError("Connection failed")
+    # Mock the client to raise a connection error (no message parameter for newer versions)
+    mock_client.return_value.chat.completions.create = AsyncMock(side_effect=APIConnectionError(request=None))
     
     with pytest.raises(LLMError, match="Network problem reaching the LLM provider"):
         await rephrase("Test text")
@@ -86,16 +88,16 @@ async def test_rephrase_api_connection_error(mock_client):
 @patch('app.llm._client')
 async def test_rephrase_invalid_json_response(mock_client):
     """Test handling of invalid JSON responses."""
-    from unittest.mock import MagicMock
+    from unittest.mock import MagicMock, AsyncMock
     
     # Mock a response with invalid JSON
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = "This is not valid JSON"
     
-    mock_client.return_value.chat.completions.create.return_value = mock_response
+    mock_client.return_value.chat.completions.create = AsyncMock(return_value=mock_response)
     
-    with pytest.raises(LLMError, match="Model returned invalid JSON"):
+    with pytest.raises(LLMError, match="Model returned invalid JSON\\."):
         await rephrase("Test text")
 
 
@@ -103,7 +105,7 @@ async def test_rephrase_invalid_json_response(mock_client):
 @patch('app.llm._client')
 async def test_rephrase_successful_mock(mock_client):
     """Test successful rephrase with mocked API response."""
-    from unittest.mock import MagicMock
+    from unittest.mock import MagicMock, AsyncMock
     import json
     
     # Mock a successful response
@@ -118,7 +120,9 @@ async def test_rephrase_successful_mock(mock_client):
     }
     
     mock_response.choices[0].message.content = json.dumps(test_result)
-    mock_client.return_value.chat.completions.create.return_value = mock_response
+    
+    # Make the create method async
+    mock_client.return_value.chat.completions.create = AsyncMock(return_value=mock_response)
     
     result = await rephrase("I need help with this project.")
     

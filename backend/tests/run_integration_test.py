@@ -9,8 +9,8 @@ import os
 import sys
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from parent directory
+load_dotenv('../.env')
 
 
 async def main():
@@ -23,6 +23,8 @@ async def main():
 
     try:
         # Import after loading .env
+        import sys
+        sys.path.insert(0, '..')
         from app.llm import rephrase, LLMError
         
         # Test with a simple sentence

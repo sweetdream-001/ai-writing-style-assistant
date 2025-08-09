@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from app.llm import rephrase, LLMError
+from app.llm import rephrase, rephrase_stream, LLMError
 
 load_dotenv()
 app = FastAPI()
@@ -35,6 +35,27 @@ async def rephrase_endpoint(body: RephraseIn):
         return RephraseOut(**result)
     except LLMError:
         # Don't leak internal details
+        raise HTTPException(status_code=500, detail="LLM call failed")
+
+
+@app.post("/api/rephrase-stream")
+async def rephrase_stream_endpoint(body: RephraseIn):
+    """Stream rephrase response in real-time using Server-Sent Events."""
+    try:
+        async def generate():
+            async for chunk in rephrase_stream(body.text):
+                # Format as Server-Sent Events
+                yield f"data: {chunk}\n\n"
+        
+        return StreamingResponse(
+            generate(),
+            media_type="text/plain",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+            }
+        )
+    except LLMError as e:
         raise HTTPException(status_code=500, detail="LLM call failed")
 
 @app.get("/health")
