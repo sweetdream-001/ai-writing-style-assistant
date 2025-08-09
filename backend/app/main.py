@@ -27,7 +27,14 @@ class RephraseOut(BaseModel):
     polite: str
     social_media: str
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
+@app.get("/hello")
+def hello():
+    return {"message": "Hello from FastAPI"}
+    
 @app.post("/api/rephrase", response_model=RephraseOut)
 async def rephrase_endpoint(body: RephraseIn):
     try:
@@ -58,11 +65,4 @@ async def rephrase_stream_endpoint(body: RephraseIn):
     except LLMError as e:
         raise HTTPException(status_code=500, detail="LLM call failed")
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-@app.get("/hello")
-def hello():
-    return {"message": "Hello from FastAPI"}
 
