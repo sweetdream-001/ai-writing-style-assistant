@@ -60,7 +60,7 @@ export function ResultsSection({
                     )}
                 </div>
                 
-                <div style={{ display: "grid", gap: 16 }}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     {streamingResult.professional && (
                         <StreamingCard 
                             title="Professional" 
@@ -134,7 +134,7 @@ export function ResultsSection({
                     </span>
                 </h3>
                 
-                <div style={{ display: "grid", gap: 16 }}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     <Card title="Professional" text={result.professional} />
                     <Card title="Casual" text={result.casual} />
                     <Card title="Polite" text={result.polite} />

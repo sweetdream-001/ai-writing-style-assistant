@@ -15,7 +15,7 @@ export function InputSection({
     disabled 
 }) {
     return (
-        <div style={{ marginBottom: 24 }}>
+        <div className="space-y-6">
             {/* Mode Toggle */}
             <Toggle
                 enabled={isStreamingMode}
@@ -27,58 +27,48 @@ export function InputSection({
                     ? "🌊 Real-time streaming mode - see results as they generate" 
                     : "⚡ Standard processing mode - get complete results at once"
                 }
-                className="mb-4"
-                style={{ marginBottom: 16 }}
+
             />
 
             {/* Text Input */}
-            <div style={{ marginBottom: 12 }}>
-                <label style={{ 
-                    display: "block", 
-                    fontSize: 14, 
-                    fontWeight: 500, 
-                    color: "#374151",
-                    marginBottom: 6
-                }}>
+            <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
                     Your text to rephrase:
+                    <textarea
+                        id="text-input"
+                        name="textInput"
+                        rows={4}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type something to rephrase in different styles..."
+                        disabled={isProcessing}
+                        autoComplete="off"
+                        className={`
+                            w-full px-4 py-3 text-sm sm:text-base 
+                            border-2 border-gray-200 rounded-lg 
+                            resize-vertical transition-all duration-200
+                            focus:border-brand-500 focus:ring-2 focus:ring-brand-500 focus:ring-opacity-20
+                            disabled:bg-gray-50 disabled:text-gray-500
+                            placeholder-gray-400 mt-2
+                        `}
+                    />
                 </label>
-                <textarea
-                    rows={4}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type something to rephrase in different styles..."
-                    disabled={isProcessing}
-                    style={{ 
-                        width: "100%", 
-                        padding: 12, 
-                        fontSize: 16,
-                        border: "2px solid #e5e7eb",
-                        borderRadius: 8,
-                        resize: "vertical",
-                        fontFamily: "inherit",
-                        transition: "border-color 0.2s ease",
-                        background: isProcessing ? "#f9fafb" : "white"
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = "#2563eb"}
-                    onBlur={(e) => e.target.style.borderColor = "#e5e7eb"}
-                />
-                <div style={{ 
-                    fontSize: 12, 
-                    color: "#6b7280", 
-                    marginTop: 4,
-                    textAlign: "right"
-                }}>
-                    {input.length} characters
+                <div className="flex justify-between items-center text-xs text-gray-500">
+                    <span>Use clear, natural language for best results</span>
+                    <span className="tabular-nums">
+                        {input.length} characters
+                    </span>
                 </div>
             </div>
             
             {/* Action Buttons */}
-            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center">
                 <Button 
                     onClick={onProcess} 
                     disabled={disabled} 
                     variant={isStreamingMode ? "streaming" : "primary"}
-                    size="md"
+                    size="lg"
+                    className="w-full sm:w-auto"
                 >
                     {isProcessing 
                         ? (isStreamingMode ? "🌊 Streaming…" : "⚡ Processing…")
@@ -90,20 +80,20 @@ export function InputSection({
                     <Button 
                         onClick={onCancel} 
                         variant="danger"
-                        size="md"
+                        size="lg"
+                        className="w-full sm:w-auto"
                     >
                         Cancel
                     </Button>
                 )}
 
                 {!isProcessing && input.trim() && (
-                    <span style={{ 
-                        fontSize: 12, 
-                        color: "#059669", 
-                        fontWeight: 500 
-                    }}>
-                        Ready to process
-                    </span>
+                    <div className="flex items-center justify-center sm:justify-start">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                            <span className="w-2 h-2 bg-emerald-400 rounded-full mr-1.5 animate-pulse"></span>
+                            Ready to process
+                        </span>
+                    </div>
                 )}
             </div>
         </div>

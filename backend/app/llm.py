@@ -3,6 +3,7 @@ from __future__ import annotations
 import json, os
 from typing import Dict
 from functools import lru_cache
+from app.security import validate_api_key
 
 # Exceptions come from the v1+ SDK
 try:
@@ -11,7 +12,7 @@ try:
 except Exception as e:
     raise RuntimeError("OpenAI SDK not installed or too old. Run: pip install -U openai") from e
 
-# Load .env only when needed (so import order doesn’t matter)
+# Load .env only when needed (so import order doesn't matter)
 def _load_env():
     try:
         from dotenv import load_dotenv
@@ -28,6 +29,11 @@ def _client() -> AsyncOpenAI:
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise LLMError("Missing OPENAI_API_KEY.")
+    
+    # Validate API key format
+    if not validate_api_key(api_key):
+        raise LLMError("Invalid OpenAI API key format.")
+    
     timeout = float(os.getenv("OPENAI_TIMEOUT", "20"))
     max_retries = int(os.getenv("OPENAI_MAX_RETRIES", "2"))
     return AsyncOpenAI(api_key=api_key, timeout=timeout, max_retries=max_retries)
@@ -52,6 +58,11 @@ async def rephrase(text: str) -> Dict[str, str]:
     cleaned = (text or "").strip()
     if not cleaned:
         raise LLMError("Input text is empty.")
+    
+    # Additional input validation
+    if len(cleaned) > 5000:
+        raise LLMError("Input text is too long. Maximum 5000 characters allowed.")
+    
     try:
         resp = await _client().chat.completions.create(
             model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
@@ -61,6 +72,7 @@ async def rephrase(text: str) -> Dict[str, str]:
             ],
             response_format={"type": "json_object"},
             temperature=0.7,
+            max_tokens=1000,  # Limit response size
         )
         data = json.loads(resp.choices[0].message.content)
         return _ensure_payload_shape(data)
@@ -69,7 +81,14 @@ async def rephrase(text: str) -> Dict[str, str]:
     except openai.APIConnectionError as e:
         raise LLMError("Network problem reaching the LLM provider.") from e
     except openai.APIStatusError as e:
-        raise LLMError(f"LLM request failed with status {e.status_code}.") from e
+        if e.status_code == 401:
+            raise LLMError("Invalid API key or authentication failed.") from e
+        elif e.status_code == 429:
+            raise LLMError("Rate limit exceeded for LLM provider.") from e
+        elif e.status_code == 400:
+            raise LLMError("Invalid request to LLM provider.") from e
+        else:
+            raise LLMError(f"LLM request failed with status {e.status_code}.") from e
     except json.JSONDecodeError as e:
         raise LLMError("Model returned invalid JSON.") from e
     except Exception as e:
@@ -85,6 +104,10 @@ async def rephrase_stream(text: str):
     if not cleaned:
         raise LLMError("Input text is empty.")
     
+    # Additional input validation
+    if len(cleaned) > 5000:
+        raise LLMError("Input text is too long. Maximum 5000 characters allowed.")
+    
     try:
         stream = await _client().chat.completions.create(
             model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
@@ -94,6 +117,7 @@ async def rephrase_stream(text: str):
             ],
             response_format={"type": "json_object"},
             temperature=0.7,
+            max_tokens=1000,  # Limit response size
             stream=True,
         )
         
@@ -107,6 +131,13 @@ async def rephrase_stream(text: str):
     except openai.APIConnectionError as e:
         raise LLMError("Network problem reaching the LLM provider.") from e
     except openai.APIStatusError as e:
-        raise LLMError(f"LLM request failed with status {e.status_code}.") from e
+        if e.status_code == 401:
+            raise LLMError("Invalid API key or authentication failed.") from e
+        elif e.status_code == 429:
+            raise LLMError("Rate limit exceeded for LLM provider.") from e
+        elif e.status_code == 400:
+            raise LLMError("Invalid request to LLM provider.") from e
+        else:
+            raise LLMError(f"LLM request failed with status {e.status_code}.") from e
     except Exception as e:
         raise LLMError(f"Unexpected LLM error: {e.__class__.__name__}") from e

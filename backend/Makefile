@@ -1,5 +1,5 @@
 # AI Writing Style Assistant - Backend Makefile
-.PHONY: help install install-dev run dev test test-verbose test-integration test-integration-simple test-streaming test-unit test-all clean lint format check setup env health
+.PHONY: help install install-dev run dev test test-verbose test-integration test-integration-simple test-streaming test-unit test-all test-security clean lint format check setup env health
 
 # Default target
 help:
@@ -18,6 +18,7 @@ help:
 	@echo "  test           - Run unit tests (no API calls)"
 	@echo "  test-verbose   - Run unit tests with verbose output"
 	@echo "  test-unit      - Run unit tests only (excluding integration)"
+	@echo "  test-security  - Run security tests"
 	@echo "  test-integration - Run integration tests (requires API key)"
 	@echo "  test-streaming - Test streaming functionality (requires API key)"
 	@echo "  test-all       - Run all tests including integration"
@@ -72,6 +73,10 @@ test-verbose:
 test-unit:
 	pytest -m "not integration" --tb=short
 
+test-security:
+	@echo "🔒 Running security tests..."
+	pytest tests/test_security.py -v -s
+
 test-integration:
 	@if [ -f .env ]; then \
 		echo "🧪 Running integration tests (requires OPENAI_API_KEY)..."; \
@@ -117,7 +122,7 @@ format:
 	@echo "🎨 Sorting imports with isort..."
 	isort app/ tests/
 
-check: lint test
+check: lint test test-security
 	@echo "✅ All checks passed!"
 
 # Cleanup

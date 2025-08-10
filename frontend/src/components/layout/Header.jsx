@@ -1,56 +1,70 @@
 // Layout Component: Header
-// Enterprise-level header with branding and navigation
+// Modern, premium header with glassmorphism and subtle animations
 
 export function Header({ connectionStatus, backendMessage }) {
     return (
-        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
-                    {/* Logo and Brand */}
-                    <div className="flex items-center space-x-4">
-                        <div className="flex-shrink-0">
-                            <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">AI</span>
+        <header className="header-modern">
+            <div className="container">
+                <div className="header-content">
+                    {/* Premium Logo and Brand */}
+                    <div className="brand-section">
+                        <div className="logo-container">
+                            <div className="logo-icon">
+                                <svg className="logo-svg" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z" fill="url(#gradient1)" />
+                                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="url(#gradient2)" strokeWidth="2" />
+                                    <defs>
+                                        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#667eea" />
+                                            <stop offset="100%" stopColor="#764ba2" />
+                                        </linearGradient>
+                                        <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#f093fb" />
+                                            <stop offset="100%" stopColor="#f5576c" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
                             </div>
-                        </div>
-                        <div className="hidden sm:block">
-                            <h1 className="text-xl font-semibold text-gray-900">
-                                Writing Style Assistant
-                            </h1>
-                            <p className="text-xs text-gray-500">
-                                Transform your text with AI-powered rephrasing
-                            </p>
-                        </div>
-                        <div className="sm:hidden">
-                            <h1 className="text-lg font-semibold text-gray-900">
-                                AI Assistant
-                            </h1>
+                            <div className="brand-text">
+                                <h1 className="brand-title">Stylify</h1>
+                                <p className="brand-subtitle">AI Writing Assistant</p>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Navigation */}
-                    <nav className="hidden md:flex items-center space-x-8">
-                        <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
-                            Dashboard
+                    {/* Premium Navigation */}
+                    <nav className="nav-modern hidden md:flex">
+                        <a href="#" className="nav-link nav-link-active">
+                            <span className="nav-icon">✦</span>
+                            Transform
                         </a>
-                        <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
+                        <a href="#" className="nav-link">
+                            <span className="nav-icon">⚡</span>
                             History
                         </a>
-                        <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
+                        <a href="#" className="nav-link">
+                            <span className="nav-icon">⚙</span>
                             Settings
                         </a>
                     </nav>
 
-                    {/* Connection Status & Mobile Menu */}
-                    <div className="flex items-center space-x-4">
-                        {/* Connection Indicator */}
-                        <ConnectionIndicator status={connectionStatus} message={backendMessage} />
+                    {/* Connection Status & Actions */}
+                    <div className="header-actions">
+                        {/* Subtle Connection Status */}
+                        <StatusIndicator status={connectionStatus} />
+                        
+                        {/* User Avatar/Menu */}
+                        <div className="user-section">
+                            <div className="avatar">
+                                <span className="avatar-text">U</span>
+                            </div>
+                        </div>
                         
                         {/* Mobile Menu Button */}
-                        <button className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors">
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
+                        <button className="mobile-menu-btn md:hidden">
+                            <span className="menu-line"></span>
+                            <span className="menu-line"></span>
+                            <span className="menu-line"></span>
                         </button>
                     </div>
                 </div>
@@ -59,56 +73,27 @@ export function Header({ connectionStatus, backendMessage }) {
     );
 }
 
-// Connection Status Indicator Component (Responsive Version)
-function ConnectionIndicator({ status, message }) {
-    const getStatusConfig = () => {
+// Subtle Status Indicator Component
+function StatusIndicator({ status }) {
+    const getStatusClass = () => {
         switch (status) {
             case "connected":
-                return {
-                    bgColor: "bg-green-100",
-                    borderColor: "border-green-500",
-                    textColor: "text-green-800",
-                    icon: "🟢",
-                    text: "Connected",
-                    pulse: false
-                };
+                return "status-indicator status-connected";
             case "disconnected":
-                return {
-                    bgColor: "bg-red-100",
-                    borderColor: "border-red-500",
-                    textColor: "text-red-800",
-                    icon: "🔴",
-                    text: "Disconnected",
-                    pulse: true
-                };
+                return "status-indicator status-disconnected";
             case "checking":
             default:
-                return {
-                    bgColor: "bg-yellow-100",
-                    borderColor: "border-yellow-500",
-                    textColor: "text-yellow-800",
-                    icon: "🟡",
-                    text: "Checking...",
-                    pulse: true
-                };
+                return "status-indicator status-checking";
         }
     };
 
-    const config = getStatusConfig();
-
     return (
-        <div className={`flex items-center gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-lg border ${config.bgColor} ${config.borderColor} ${config.textColor}`}>
-            <div className={`text-xs ${config.pulse ? 'animate-pulse' : ''}`}>
-                {config.icon}
-            </div>
-            <div className="flex flex-col">
-                <span className="text-xs font-medium">{config.text}</span>
-                {message && (
-                    <span className="text-xs opacity-75 hidden sm:block" style={{ fontSize: '10px' }}>
-                        {message}
-                    </span>
-                )}
-            </div>
+        <div className={getStatusClass()}>
+            <div className="status-dot"></div>
+            <span className="status-tooltip">
+                {status === "connected" ? "Connected" : 
+                 status === "disconnected" ? "Disconnected" : "Connecting..."}
+            </span>
         </div>
     );
 }

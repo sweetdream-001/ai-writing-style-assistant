@@ -27,29 +27,52 @@ export function RephraseApp() {
     } = useRephrase();
 
     return (
-        <div className="w-full">
-            {/* Hero Section */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8 mb-8">
-                <div className="text-center mb-8">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                        Transform Your Writing Style
+        <div className="main-content">
+            {/* Premium Hero Section */}
+            <div className="hero-section">
+                <div className="hero-content">
+                    <div className="hero-badge">
+                        <span className="badge-text">✨ Powered by AI</span>
+                    </div>
+                    <h1 className="hero-title">
+                        Transform Your Writing
+                        <span className="hero-gradient"> with Style</span>
                     </h1>
-                    <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-                        Use AI to rephrase your text in different styles: professional, casual, polite, and social media-friendly.
+                    <p className="hero-description">
+                        Instantly rephrase your text in multiple styles. Professional, casual, polite, 
+                        or social media-ready. Your words, perfected by AI.
                     </p>
+                    
+                    {/* Stats or Features */}
+                    <div className="hero-stats">
+                        <div className="stat-item">
+                            <span className="stat-number">4</span>
+                            <span className="stat-label">Writing Styles</span>
+                        </div>
+                        <div className="stat-item">
+                            <span className="stat-number">⚡</span>
+                            <span className="stat-label">Instant Results</span>
+                        </div>
+                        <div className="stat-item">
+                            <span className="stat-number">🎯</span>
+                            <span className="stat-label">Perfect Tone</span>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Input Section */}
-                <InputSection
-                    input={input}
-                    setInput={setInput}
-                    isStreamingMode={isStreamingMode}
-                    setIsStreamingMode={setIsStreamingMode}
-                    onProcess={onProcess}
-                    onCancel={onCancel}
-                    isProcessing={isProcessing}
-                    disabled={disabled}
-                />
+                <div className="input-container">
+                    <InputSection
+                        input={input}
+                        setInput={setInput}
+                        isStreamingMode={isStreamingMode}
+                        setIsStreamingMode={setIsStreamingMode}
+                        onProcess={onProcess}
+                        onCancel={onCancel}
+                        isProcessing={isProcessing}
+                        disabled={disabled}
+                    />
+                </div>
             </div>
 
             {/* Results Section */}
