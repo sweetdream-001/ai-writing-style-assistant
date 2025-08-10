@@ -185,11 +185,11 @@ jobs:
 
       - name: Test Docker containers
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 30
           curl -f http://localhost:8000/health
           curl -f http://localhost:80/
-          docker-compose down
+          docker compose down
 
   # Integration Tests
   integration-test:
@@ -236,7 +236,7 @@ jobs:
         run: |
           echo "Deploying to staging environment..."
           # Add your staging deployment logic here
-          # Example: kubectl apply, docker-compose, etc.
+          # Example: kubectl apply, docker compose, etc.
 
   # Deploy to Production
   deploy-production:
@@ -254,4 +254,4 @@ jobs:
         run: |
           echo "Deploying to production environment..."
           # Add your production deployment logic here
-          # Example: kubectl apply, docker-compose, etc.
+          # Example: kubectl apply, docker compose, etc.

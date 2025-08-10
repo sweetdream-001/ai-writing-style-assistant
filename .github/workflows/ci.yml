@@ -112,8 +112,8 @@ jobs:
 
       - name: Test Docker containers
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 30
           curl -f http://localhost:8000/health
           curl -f http://localhost:80/
-          docker-compose down
+          docker compose down
