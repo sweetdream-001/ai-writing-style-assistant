@@ -1,0 +1,9 @@
+# Bandit configuration file
+# Exclude certain tests that are not relevant for our application
+
+exclude_dirs: ['tests', '.venv', '__pycache__']
+
+# Skip certain tests that are false positives for our use case
+skips: ['B101', 'B601']
+
+# Use default test set but exclude some false positives

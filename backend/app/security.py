@@ -49,7 +49,7 @@ class RateLimiter:
             if current_time - req_time < 3600
         ]
 
-# Global rate limiter instance
+# Global rate limiter instance with default values
 rate_limiter = RateLimiter()
 
 def get_client_ip(request: Request) -> str:
