@@ -1,7 +1,7 @@
 // Layout Component: Header
 // Modern, premium header with glassmorphism and subtle animations
 
-export function Header({ connectionStatus, backendMessage }) {
+export function Header({ connectionStatus }) {
     return (
         <header className="header-modern">
             <div className="container">
