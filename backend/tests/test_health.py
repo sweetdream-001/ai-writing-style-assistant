@@ -9,4 +9,11 @@ async def test_health():
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         res = await ac.get("/health")
     assert res.status_code == 200
-    assert res.json() == {"status": "ok", "environment": "development"}
+    
+    data = res.json()
+    assert data["status"] == "ok"
+    assert "environment" in data
+    assert "version" in data
+    # Environment can be "development", "production", etc. - don't hardcode it
+    assert isinstance(data["environment"], str)
+    assert isinstance(data["version"], str)
