@@ -288,10 +288,30 @@ jobs:
           docker compose up -d
           echo "Waiting for services to start..."
           sleep 30
+          
+          echo "Checking container status..."
+          docker compose ps
+          
           echo "Testing backend health..."
-          curl -f http://localhost:8000/health || echo "Backend health check failed"
+          if curl -f http://localhost:8000/api/v1/health; then
+            echo "✅ Backend health check passed"
+          else
+            echo "❌ Backend health check failed"
+            echo "Backend logs:"
+            docker compose logs backend
+            exit 1
+          fi
+          
           echo "Testing frontend..."
-          curl -f http://localhost:80/ || echo "Frontend check failed"
+          if curl -f http://localhost:80/; then
+            echo "✅ Frontend check passed"
+          else
+            echo "❌ Frontend check failed"
+            echo "Frontend logs:"
+            docker compose logs frontend
+            exit 1
+          fi
+          
           echo "Stopping containers..."
           docker compose down
           echo "=== Docker test completed ==="
