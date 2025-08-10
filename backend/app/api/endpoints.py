@@ -1,6 +1,6 @@
 # app/api/endpoints.py
 from fastapi import APIRouter, HTTPException, Request, Depends
-from fastapi.responses import StreamingResponse, RedirectResponse
+from fastapi.responses import StreamingResponse, RedirectResponse, HTMLResponse
 from app.models import RephraseIn, RephraseOut, HealthResponse
 from app.llm import rephrase, rephrase_stream, LLMError
 from app.security import rate_limiter, get_client_ip
@@ -80,6 +80,12 @@ async def rephrase_stream_endpoint(
     except LLMError as e:
         raise HTTPException(status_code=500, detail="LLM call failed")
 
+# Custom docs endpoint
+@router.get("/docs", response_class=HTMLResponse)
+async def legacy_docs():
+    """Legacy docs endpoint - redirects to v1 docs."""
+    return RedirectResponse(url="/api/v1/docs", status_code=302)
+
 # API version info
 @router.get("/")
 def api_root():
@@ -92,8 +98,8 @@ def api_root():
         "endpoints": {
             "v1": "/api/v1",
             "health": "/api/health",
-            "docs": "/docs",
-            "redoc": "/redoc"
+            "docs": "/api/v1/docs",
+            "swagger": "/docs (development only)"
         },
         "deprecation_notice": "Legacy endpoints will be deprecated in v2.0.0. Please use /api/v1/ endpoints."
     }
