@@ -88,10 +88,12 @@ export async function processStreamingResponse(response, onChunk, onError) {
  * API endpoints configuration
  */
 export const API_ENDPOINTS = {
-    REPHRASE: "http://localhost:8000/api/rephrase",
-    REPHRASE_STREAM: "http://localhost:8000/api/rephrase-stream",
-    HEALTH: "http://localhost:8000/health",
-    HELLO: "http://localhost:8000/hello"
+    REPHRASE: "http://localhost:8000/api/v1/rephrase",
+    REPHRASE_STREAM: "http://localhost:8000/api/v1/rephrase-stream",
+    HEALTH: "http://localhost:8000/api/v1/health",
+    HELLO: "http://localhost:8000/api/v1/hello",
+    VERSION: "http://localhost:8000/api/v1/version",
+    STATUS: "http://localhost:8000/api/v1/status"
 };
 
 /**

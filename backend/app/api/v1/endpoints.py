@@ -1,16 +1,15 @@
-# app/api/endpoints.py
+# app/api/v1/endpoints.py
 from fastapi import APIRouter, HTTPException, Request, Depends
-from fastapi.responses import StreamingResponse, RedirectResponse
+from fastapi.responses import StreamingResponse
 from app.models import RephraseIn, RephraseOut, HealthResponse
 from app.llm import rephrase, rephrase_stream, LLMError
 from app.security import rate_limiter, get_client_ip
 
 router = APIRouter()
 
-# Legacy endpoints (redirect to v1)
 @router.get("/health", response_model=HealthResponse)
 def health():
-    """Legacy health check endpoint - redirects to v1."""
+    """Health check endpoint."""
     from app.config import get_settings
     settings = get_settings()
     return HealthResponse(
@@ -21,8 +20,8 @@ def health():
 
 @router.get("/hello")
 def hello():
-    """Legacy hello endpoint - redirects to v1."""
-    return {"message": "Hello from FastAPI (legacy endpoint - use /api/v1/hello)"}
+    """Simple hello endpoint for testing."""
+    return {"message": "Hello from FastAPI v1"}
 
 @router.options("/rephrase")
 async def rephrase_options():
@@ -40,7 +39,7 @@ async def rephrase_endpoint(
     request: Request,
     client_ip: str = Depends(get_client_ip)
 ):
-    """Legacy rephrase endpoint - redirects to v1."""
+    """Rephrase text in different styles."""
     # Rate limiting
     if not await rate_limiter.is_allowed(client_ip):
         raise HTTPException(status_code=429, detail="Rate limit exceeded. Please try again later.")
@@ -58,7 +57,7 @@ async def rephrase_stream_endpoint(
     request: Request,
     client_ip: str = Depends(get_client_ip)
 ):
-    """Legacy streaming endpoint - redirects to v1."""
+    """Stream rephrase response in real-time using Server-Sent Events."""
     # Rate limiting
     if not await rate_limiter.is_allowed(client_ip):
         raise HTTPException(status_code=429, detail="Rate limit exceeded. Please try again later.")
@@ -79,21 +78,3 @@ async def rephrase_stream_endpoint(
         )
     except LLMError as e:
         raise HTTPException(status_code=500, detail="LLM call failed")
-
-# API version info
-@router.get("/")
-def api_root():
-    """API root endpoint with version information."""
-    return {
-        "message": "AI Writing Style Assistant API",
-        "version": "1.0.0",
-        "available_versions": ["v1"],
-        "current_version": "v1",
-        "endpoints": {
-            "v1": "/api/v1",
-            "health": "/api/health",
-            "docs": "/docs",
-            "redoc": "/redoc"
-        },
-        "deprecation_notice": "Legacy endpoints will be deprecated in v2.0.0. Please use /api/v1/ endpoints."
-    }

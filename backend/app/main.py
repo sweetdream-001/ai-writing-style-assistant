@@ -5,7 +5,8 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 
 from app.config import get_settings
-from app.api.endpoints import router
+from app.api.endpoints import router as legacy_router
+from app.api.v1 import router as v1_router
 from app.middleware import SecurityHeadersMiddleware
 
 # Get application settings
@@ -38,6 +39,7 @@ app.add_middleware(
 )
 
 # Include API routes
-app.include_router(router)
+app.include_router(legacy_router, prefix="/api")
+app.include_router(v1_router, prefix="/api")
 
 
