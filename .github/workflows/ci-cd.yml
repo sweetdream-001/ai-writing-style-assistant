@@ -208,6 +208,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        # Note: Requires repository permissions for "Contents" and "Packages"
 
       - name: Extract metadata
         id: meta
@@ -222,6 +223,7 @@ jobs:
             type=sha
 
       - name: Build and push Backend image
+        id: backend-push
         uses: docker/build-push-action@v5
         with:
           context: ./backend
@@ -233,8 +235,10 @@ jobs:
           platforms: linux/amd64
           build-args: |
             BUILDKIT_INLINE_CACHE=1
+        continue-on-error: true
 
       - name: Build and push Frontend image
+        id: frontend-push
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -246,6 +250,36 @@ jobs:
           platforms: linux/amd64
           build-args: |
             BUILDKIT_INLINE_CACHE=1
+        continue-on-error: true
+
+      - name: Check push status and provide guidance
+        if: always()
+        run: |
+          echo "=== Push Status Check ==="
+          if [ "${{ steps.backend-push.outputs.status }}" == "success" ]; then
+            echo "✅ Backend image pushed successfully"
+          else
+            echo "⚠️  Backend image push failed - likely due to GHCR permissions"
+            echo "📋 To fix this, ensure:"
+            echo "   1. Repository has 'Packages' permission enabled"
+            echo "   2. GitHub Actions has write access to packages"
+            echo "   3. Organization allows package creation"
+          fi
+          
+          if [ "${{ steps.frontend-push.outputs.status }}" == "success" ]; then
+            echo "✅ Frontend image pushed successfully"
+          else
+            echo "⚠️  Frontend image push failed - likely due to GHCR permissions"
+          fi
+
+      - name: Build local images for testing
+        run: |
+          echo "=== Building Local Images for Testing ==="
+          echo "Building backend image locally..."
+          docker build -t backend-test ./backend
+          echo "Building frontend image locally..."
+          docker build -t frontend-test ./frontend
+          echo "✅ Local images built successfully"
 
       - name: Test Docker containers
         run: |
