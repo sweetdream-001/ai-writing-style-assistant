@@ -9,7 +9,7 @@ import pytest
 from dotenv import load_dotenv
 
 # Load environment variables from parent directory
-load_dotenv('../.env')
+load_dotenv('../../.env')
 
 
 @pytest.mark.asyncio

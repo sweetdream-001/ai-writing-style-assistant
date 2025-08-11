@@ -10,7 +10,7 @@ import sys
 from dotenv import load_dotenv
 
 # Load environment variables from parent directory
-load_dotenv('../.env')
+load_dotenv('../../.env')
 
 
 async def main():

@@ -33,7 +33,7 @@ help:
 
 # Setup and Installation
 setup: install-dev env
-	@echo "✅ Setup complete! Don't forget to add your OPENAI_API_KEY to .env"
+	@echo "✅ Setup complete! Don't forget to add your OPENAI_API_KEY to ../.env"
 
 install:
 	pip install -r requirements.txt
@@ -42,12 +42,12 @@ install-dev: install
 	pip install -r requirements-dev.txt
 
 env:
-	@if [ ! -f .env ]; then \
-		cp env.example .env; \
-		echo "📝 Created .env file from template"; \
-		echo "⚠️  Please edit .env and add your OPENAI_API_KEY"; \
+	@if [ ! -f ../.env ]; then \
+		cp env.example ../.env; \
+		echo "📝 Created .env file in root directory from template"; \
+		echo "⚠️  Please edit ../.env and add your OPENAI_API_KEY"; \
 	else \
-		echo "📝 .env file already exists"; \
+		echo "📝 .env file already exists in root directory"; \
 	fi
 
 # Development
@@ -78,34 +78,34 @@ test-security:
 	pytest tests/test_security.py -v -s
 
 test-integration:
-	@if [ -f .env ]; then \
+	@if [ -f ../.env ]; then \
 		echo "🧪 Running integration tests (requires OPENAI_API_KEY)..."; \
 		pytest -m integration -v -s; \
 	else \
-		echo "❌ .env file not found. Run 'make env' first and add your API key"; \
+		echo "❌ .env file not found in root directory. Run 'make env' first and add your API key"; \
 	fi
 
 test-integration-simple:
-	@if [ -f .env ]; then \
+	@if [ -f ../.env ]; then \
 		cd tests && python run_integration_test.py; \
 	else \
-		echo "❌ .env file not found. Run 'make env' first and add your API key"; \
+		echo "❌ .env file not found in root directory. Run 'make env' first and add your API key"; \
 	fi
 
 test-streaming:
-	@if [ -f .env ]; then \
+	@if [ -f ../.env ]; then \
 		echo "🌊 Testing streaming functionality..."; \
 		cd tests && python test_streaming.py; \
 	else \
-		echo "❌ .env file not found. Run 'make env' first and add your API key"; \
+		echo "❌ .env file not found in root directory. Run 'make env' first and add your API key"; \
 	fi
 
 test-all:
-	@if [ -f .env ]; then \
+	@if [ -f ../.env ]; then \
 		echo "🧪 Running all tests..."; \
 		pytest -v; \
 	else \
-		echo "⚠️  Running unit tests only (.env file not found for integration tests)"; \
+		echo "⚠️  Running unit tests only (.env file not found in root directory for integration tests)"; \
 		pytest -m "not integration" -v; \
 	fi
 

@@ -64,44 +64,50 @@ The AI Writing Style Assistant is a smart text transformation tool that takes yo
 ### Infrastructure
 - **CI/CD**: GitHub Actions with automated testing and deployment
 - **Security**: Vulnerability scanning with Trivy and Bandit
-- **Deployment**: Direct deployment without containerization
+- **Deployment**: Docker containerization with docker-compose
+- **Containerization**: Multi-stage Docker builds for optimized production images
 
 ## 🚀 Quick Start
 
 ### What You'll Need
-- Python 3.11 or higher (Recommended 3.12)
-- Node.js 20 or higher (Recommended v23.11.1)
+- **Docker and Docker Compose** (Recommended - easiest way)
+- **OR** Python 3.11+ and Node.js 20+ for direct installation
 - OpenAI API key (get one at [platform.openai.com](https://platform.openai.com))
 
-### Try It Out
-1. **Start the backend**:
-   ```bash
-   git clone <repository-url>
-   cd ai-writing-style-assistant
-   cd backend
-   pip install -r requirements.txt
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
+### 🐳 Option 1: Docker Setup (Recommended - Fastest & Easiest)
 
-2. **Start the frontend** (in a new terminal):
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+**This is the quickest way to get started!**
 
-3. **Open your browser** to `http://localhost:3000`
+```bash
+# Clone the repository
+git clone <repository-url>
+cd ai-writing-style-assistant
 
-3. **Test with a sample text**:
-   - Type: "I need to cancel my appointment tomorrow"
-   - Choose "Streaming Mode" to see real-time transformation
-   - Watch as your text gets rephrased in 4 different styles!
+# Set up environment
+cp backend/env.example .env
+# Edit .env and add your OPENAI_API_KEY
 
-4. **Try different modes**:
-   - **Regular Mode**: Get all results at once (faster)
-   - **Streaming Mode**: Watch results appear in real-time (more engaging)
+# Start the entire application
+docker compose up --build
+```
 
-### Option 1: Direct Installation (Recommended)
+**Access the application:**
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+
+**Test with a sample text:**
+- Type: "I need to cancel my appointment tomorrow"
+- Choose "Streaming Mode" to see real-time transformation
+- Watch as your text gets rephrased in 4 different styles!
+
+**Try different modes:**
+- **Regular Mode**: Get all results at once (faster)
+- **Streaming Mode**: Watch results appear in real-time (more engaging)
+
+📖 **For detailed Docker instructions, see [DOCKER.md](DOCKER.md)**
+
+### Option 2: Direct Installation (For Development)
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -115,7 +121,7 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 
 # Create environment file
-cp env.example .env
+cp backend/env.example .env
 # Edit .env and add your OPENAI_API_KEY
 
 # Start backend server
@@ -132,7 +138,7 @@ npm run dev
 # API Docs: http://localhost:8000/docs
 ```
 
-### Option 2: Development with Hot Reload
+### Option 3: Development with Hot Reload
 ```bash
 # Backend setup (same as above, but with auto-reload)
 cd backend
@@ -142,7 +148,7 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 
 # Create environment file
-cp env.example .env
+cp backend/env.example .env
 # Edit .env and add your OPENAI_API_KEY
 
 # Start backend server with auto-reload
@@ -164,6 +170,7 @@ npm run dev
 ### Base URL
 - **Production**: `https://your-domain.com/api/v1`
 - **Development**: `http://localhost:8000/api/v1`
+- **Docker**: `http://localhost:8000/api/v1`
 
 ### Endpoints
 
@@ -319,15 +326,20 @@ ai-writing-style-assistant/
 │   │   └── middleware.py     # Custom middleware
 │   ├── tests/                # Test suite
 │   ├── requirements.txt      # Production dependencies
-│   └── requirements-dev.txt  # Development dependencies
+│   ├── requirements-dev.txt  # Development dependencies
+│   └── Dockerfile           # Backend container
 ├── frontend/
 │   ├── src/
 │   │   ├── components/       # React components
 │   │   ├── hooks/           # Custom hooks
 │   │   └── utils/           # Utility functions
-│   └── package.json
-
-└── .github/workflows/       # CI/CD pipelines
+│   ├── package.json
+│   ├── Dockerfile           # Frontend container
+│   └── nginx.conf           # Nginx configuration
+├── docker-compose.yml       # Multi-container setup
+├── DOCKER.md               # Docker documentation
+├── CI-CD.md                # CI/CD documentation
+└── .github/workflows/      # CI/CD pipelines
 ```
 
 ### Code Quality
@@ -338,7 +350,7 @@ ai-writing-style-assistant/
 
 ### Environment Variables
 ```bash
-# Backend (.env)
+# Root directory (.env) - used by both Docker and direct development
 OPENAI_API_KEY=your_openai_api_key
 ENVIRONMENT=development
 ALLOWED_HOSTS=localhost,127.0.0.1
@@ -377,6 +389,15 @@ RATE_LIMIT_PER_HOUR=1000
 
 ## 🚀 Deployment
 
+### 🐳 Docker Deployment (Recommended)
+```bash
+# Production deployment with Docker
+docker compose -f docker-compose.yml up -d --build
+
+# Or with custom environment
+docker compose --env-file .env.prod up -d --build
+```
+
 ### Direct Deployment
 ```bash
 # Backend deployment
@@ -396,6 +417,7 @@ The project includes GitHub Actions workflows:
 - **Security scanning** with Trivy and Bandit
 - **Automated testing** for backend and frontend
 - **Integration testing** with OpenAI API
+- **Docker image building** and testing
 - **Deployment** to staging and production
 
 ## 🔒 Security Features
@@ -440,7 +462,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For questions or issues:
 1. Check the [API documentation](http://localhost:8000/docs) when running locally
 2. Review the test files for usage examples
-3. Open an issue on GitHub with detailed information
+3. Check [DOCKER.md](DOCKER.md) for Docker-specific issues
+4. Open an issue on GitHub with detailed information
 
 ---
 
