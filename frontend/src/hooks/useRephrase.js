@@ -1,24 +1,31 @@
-// Custom Hook: useRephrase
-// Manages all rephrase functionality (normal and streaming)
+// Our main hook that handles all the rephrasing logic
+// Both regular and streaming modes
 
 import { useState, useRef } from 'react';
 import { processStreamingResponse, API_ENDPOINTS, REQUEST_CONFIG } from '../utils/streamingUtils';
 
 export function useRephrase() {
-    // State management
+    // What the user types
     const [input, setInput] = useState("");
+    // The final results we get back
     const [result, setResult] = useState(null);
+    // Any errors that happen
     const [error, setError] = useState("");
+    // Whether we're currently processing
     const [loading, setLoading] = useState(false);
+    // Which mode the user picked
     const [isStreamingMode, setIsStreamingMode] = useState(false);
+    // The raw streaming content as it comes in
     const [streamingContent, setStreamingContent] = useState("");
+    // Whether we're actively getting streaming data
     const [isActivelyStreaming, setIsActivelyStreaming] = useState(false);
+    // The parsed streaming results
     const [streamingResult, setStreamingResult] = useState(null);
     
-    // Refs
+    // Keep track of our request so we can cancel it
     const controllerRef = useRef(null);
 
-    // Reset all states
+    // Clear everything and start fresh
     const resetState = () => {
         setError("");
         setResult(null);
@@ -26,7 +33,7 @@ export function useRephrase() {
         setStreamingResult(null);
     };
 
-    // Normal processing
+    // Handle regular (non-streaming) requests
     const processNormal = async () => {
         setLoading(true);
         const controller = new AbortController();
@@ -57,7 +64,7 @@ export function useRephrase() {
         }
     };
 
-    // Streaming processing
+    // Handle streaming requests (real-time updates)
     const processStreaming = async () => {
         setIsActivelyStreaming(true);
         const controller = new AbortController();
@@ -97,7 +104,7 @@ export function useRephrase() {
         }
     };
 
-    // Main process function
+    // The main function that decides which processing method to use
     const onProcess = async () => {
         resetState();
         
@@ -108,17 +115,17 @@ export function useRephrase() {
         }
     };
 
-    // Cancel function
+    // Stop any ongoing requests
     const onCancel = () => {
         controllerRef.current?.abort();
     };
 
-    // Computed values
+    // Helper values we compute from our state
     const disabled = loading || isActivelyStreaming || !input.trim();
     const isProcessing = loading || isActivelyStreaming;
 
     return {
-        // State
+        // All our state variables
         input,
         setInput,
         result,
@@ -130,11 +137,11 @@ export function useRephrase() {
         isActivelyStreaming,
         streamingResult,
         
-        // Actions
+        // Functions that change our state
         onProcess,
         onCancel,
         
-        // Computed
+        // Computed helper values
         disabled,
         isProcessing
     };

@@ -1,4 +1,4 @@
-# app/models.py
+# Data models and validation
 from pydantic import BaseModel, Field, field_validator
 from typing import Dict, Optional
 
@@ -11,8 +11,8 @@ class RephraseIn(BaseModel):
         if not v or not v.strip():
             raise ValueError("Text cannot be empty")
         
-        # Basic content filtering
-        inappropriate_words = ['spam', 'malware', 'hack']  # Add more as needed
+            # Simple content filtering - can be expanded
+    inappropriate_words = ['spam', 'malware', 'hack']  # Add more as needed
         if any(word in v.lower() for word in inappropriate_words):
             raise ValueError("Text contains inappropriate content")
         

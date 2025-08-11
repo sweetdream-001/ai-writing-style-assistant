@@ -1,5 +1,5 @@
-// UI Component: Button
-// Responsive button component with TailwindCSS
+// A reusable button component
+// Handles different styles and states
 
 export function Button({ 
     children, 

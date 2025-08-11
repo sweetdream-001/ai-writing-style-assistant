@@ -1,5 +1,5 @@
-// Utility: Streaming Functions
 // Helper functions for handling streaming responses
+// Parses the real-time data from the server
 
 /**
  * Extract partial style values from incomplete JSON
@@ -9,19 +9,16 @@
 export function extractPartialStyles(buffer) {
     const styles = {};
     
-    // Extract professional
+    // Pull out each writing style from the buffer
     const profMatch = buffer.match(/"professional":\s*"([^"]*)/);
     if (profMatch) styles.professional = profMatch[1];
     
-    // Extract casual
     const casualMatch = buffer.match(/"casual":\s*"([^"]*)/);
     if (casualMatch) styles.casual = casualMatch[1];
     
-    // Extract polite
     const politeMatch = buffer.match(/"polite":\s*"([^"]*)/);
     if (politeMatch) styles.polite = politeMatch[1];
     
-    // Extract social_media
     const socialMatch = buffer.match(/"social_media":\s*"([^"]*)/);
     if (socialMatch) styles.social_media = socialMatch[1];
     
@@ -49,11 +46,11 @@ export async function processStreamingResponse(response, onChunk, onError) {
             
             for (const line of lines) {
                 if (line.startsWith('data: ')) {
-                    const data = line.slice(6); // Remove 'data: ' prefix
+                    const data = line.slice(6); // Strip the 'data: ' prefix
                     if (data.trim()) {
                         buffer += data;
                         
-                        // Try to parse complete JSON first
+                        // First try to parse the complete JSON
                         try {
                             const parsed = JSON.parse(buffer);
                             onChunk({
@@ -66,7 +63,7 @@ export async function processStreamingResponse(response, onChunk, onError) {
                                 }
                             });
                         } catch {
-                            // Partial JSON, extract what we can
+                            // If we can't parse complete JSON, extract what we have
                             const partial = extractPartialStyles(buffer);
                             if (partial) {
                                 onChunk({

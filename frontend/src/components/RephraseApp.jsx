@@ -1,5 +1,5 @@
-// Main Component: RephraseApp
-// Enterprise-level component architecture
+// The main app component - this is where everything comes together
+// Handles the overall layout and state management
 
 import { InputSection } from './features/InputSection';
 import { ResultsSection } from './features/ResultsSection';
@@ -7,7 +7,7 @@ import { useRephrase } from '../hooks/useRephrase';
 
 export function RephraseApp() {
     const {
-        // State
+        // What the user types and what we get back
         input,
         setInput,
         result,
@@ -17,11 +17,11 @@ export function RephraseApp() {
         isActivelyStreaming,
         streamingResult,
         
-        // Actions
+        // Functions to handle user actions
         onProcess,
         onCancel,
         
-        // Computed
+        // Helper values
         disabled,
         isProcessing
     } = useRephrase();

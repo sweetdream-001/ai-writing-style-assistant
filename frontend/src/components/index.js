@@ -1,24 +1,21 @@
-// Component Exports
-// Central export file for all components
+// All our components in one place - makes imports cleaner
 
-// Main App Component
+// The main app that ties everything together
 export { RephraseApp } from './RephraseApp';
 
-// Layout Components
+// Page structure components
 export { PageLayout } from './layout/PageLayout';
 
-// Feature Components
+// Core functionality
 export { InputSection } from './features/InputSection';
 export { ResultsSection } from './features/ResultsSection';
 
-// UI Components
+// Reusable UI pieces
 export { Button } from './ui/Button';
 export { Card } from './ui/Card';
 export { StreamingCard } from './ui/StreamingCard';
 export { Toggle } from './ui/Toggle';
 
-// Hooks
+// Custom hooks and utilities
 export { useRephrase } from '../hooks/useRephrase';
-
-// Utils
 export * from '../utils/streamingUtils';

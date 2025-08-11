@@ -1,5 +1,5 @@
-// Layout Component: Footer
-// Clean footer with ONLY TailwindCSS classes
+// The bottom footer
+// Simple branding and links
 
 export function Footer() {
     const currentYear = new Date().getFullYear();

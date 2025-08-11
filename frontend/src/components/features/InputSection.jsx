@@ -1,5 +1,5 @@
-// Feature Component: Input Section
-// Handles text input and mode selection
+// Where users type their text and choose streaming mode
+// The main input area of the app
 
 import { Toggle } from '../ui/Toggle';
 import { Button } from '../ui/Button';

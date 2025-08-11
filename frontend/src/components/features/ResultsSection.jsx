@@ -1,5 +1,5 @@
-// Feature Component: Results Section
-// Displays both normal and streaming results
+// Shows the rephrased results to the user
+// Handles both regular and streaming display modes
 
 import { Card } from '../ui/Card';
 import { StreamingCard } from '../ui/StreamingCard';

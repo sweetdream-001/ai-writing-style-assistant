@@ -1,7 +1,7 @@
-// Test setup file for Vitest
+// Set up our test environment
 import '@testing-library/jest-dom'
 
-// Mock fetch for API calls
+// Mock the fetch API so we can control responses
 global.fetch = vi.fn()
 
 // Mock EventSource for streaming tests
@@ -17,7 +17,7 @@ global.EventSource = vi.fn().mockImplementation(() => ({
   CLOSED: 2
 }))
 
-// Clean up after each test
+// Reset mocks between tests
 afterEach(() => {
   vi.clearAllMocks()
 })

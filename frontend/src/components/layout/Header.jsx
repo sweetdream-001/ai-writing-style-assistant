@@ -1,5 +1,5 @@
-// Layout Component: Header
-// Modern, premium header with glassmorphism and subtle animations
+// The top navigation bar
+// Shows connection status and app branding
 
 export function Header({ connectionStatus }) {
     return (

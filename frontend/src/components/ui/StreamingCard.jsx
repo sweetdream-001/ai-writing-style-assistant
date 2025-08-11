@@ -1,5 +1,5 @@
-// UI Component: StreamingCard
-// Responsive streaming card with copy functionality
+// A card specifically for streaming results
+// Shows real-time updates as they come in
 
 import { useState } from 'react';
 

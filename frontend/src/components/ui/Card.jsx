@@ -1,5 +1,5 @@
-// UI Component: Card
-// Responsive card component with copy functionality
+// A card that displays text with copy functionality
+// Used for showing rephrased results
 
 import { useState } from 'react';
 

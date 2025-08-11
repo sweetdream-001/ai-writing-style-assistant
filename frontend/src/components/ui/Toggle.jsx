@@ -1,5 +1,5 @@
-// UI Component: Toggle Switch
-// Responsive toggle switch with TailwindCSS
+// A simple toggle switch component
+// Used for switching between regular and streaming modes
 
 export function Toggle({ 
     enabled, 

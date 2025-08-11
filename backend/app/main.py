@@ -1,4 +1,4 @@
-# app/main.py
+# Main application entry point
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -8,10 +8,10 @@ from app.config import get_settings
 from app.api.v1 import router as v1_router
 from app.middleware import SecurityHeadersMiddleware
 
-# Get application settings
+# Load our configuration
 settings = get_settings()
 
-# Create FastAPI application
+# Set up the main app
 app = FastAPI(
     title=settings.title,
     description=settings.description,
@@ -20,15 +20,15 @@ app = FastAPI(
     redoc_url=settings.redoc_url,
 )
 
-# Security middleware
+# Force HTTPS and trusted hosts in production
 if settings.is_production:
     app.add_middleware(HTTPSRedirectMiddleware)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_hosts)
 
-# Add custom middleware
+# Add our custom security headers
 app.add_middleware(SecurityHeadersMiddleware)
 
-# CORS middleware
+# Handle cross-origin requests
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -37,7 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API routes
+# Set up our API endpoints
 app.include_router(v1_router, prefix="/api")
 
 

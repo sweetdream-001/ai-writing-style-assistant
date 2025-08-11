@@ -1,5 +1,5 @@
-// Layout Component: Page Layout
-// Responsive main content container
+// The main content wrapper
+// Handles responsive layout and spacing
 
 export function PageLayout({ children, className = "" }) {
     return (
