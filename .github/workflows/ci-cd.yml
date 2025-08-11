@@ -83,26 +83,30 @@ jobs:
   backend-test:
     name: Backend Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.11, 3.12]
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.12'
+
+      - name: Debug Python version
+        run: |
+          echo "Python version: $(python --version)"
+          echo "Python location: $(which python)"
+          echo "Python path: $PYTHONPATH"
+          echo "Environment: $ENVIRONMENT"
 
       - name: Cache pip dependencies
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('backend/requirements*.txt') }}
+          key: ${{ runner.os }}-pip-3.12-${{ hashFiles('backend/requirements*.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-3.12-
 
       - name: Install dependencies
         working-directory: ./backend
@@ -128,7 +132,6 @@ jobs:
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
-        if: matrix.python-version == '3.12'
         with:
           file: ./backend/.coverage
           flags: backend
