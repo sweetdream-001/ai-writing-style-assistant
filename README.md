@@ -80,7 +80,8 @@ The AI Writing Style Assistant is a smart text transformation tool that takes yo
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone git@github.com:sweetdream-001/ai-writing-style-assistant.git
+git clone https://github.com/sweetdream-001/ai-writing-style-assistant.git
 cd ai-writing-style-assistant
 
 # Set up environment
