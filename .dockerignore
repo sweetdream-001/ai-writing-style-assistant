@@ -1,0 +1,47 @@
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+CI-CD.md
+*.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI/CD
+.github/
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Node modules (if any at root)
+node_modules/
+
+# Python cache (if any at root)
+__pycache__/
+*.pyc
