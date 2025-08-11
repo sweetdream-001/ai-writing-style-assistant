@@ -18,6 +18,7 @@ on:
 
 env:
   # Environment variables for deployment
+  ENVIRONMENT: production
 
 jobs:
   # Security and Code Quality
