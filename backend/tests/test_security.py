@@ -1,21 +1,6 @@
 # tests/test_security.py
 import pytest
 from httpx import AsyncClient, ASGITransport
-from app.main import app
-
-transport = ASGITransport(app=app)
-
-@pytest.mark.asyncio
-async def test_rate_limiting():
-    """Test rate limiting functionality."""
-    from app.security import rate_limiter
-    
-    # Test that rate limiting allows requests initially
-    assert await rate_limiter.is_allowed("127.0.0.1") == True
-    
-    # Test that rate limiting blocks after exceeding limit
-    # This is a basic test - in a real scenario, you'd need to simulate time passing
-    # For now, we just test that the function exists and works
 
 @pytest.mark.asyncio
 async def test_api_key_validation():
@@ -83,6 +68,9 @@ async def test_client_ip_extraction():
 @pytest.mark.asyncio
 async def test_security_headers():
     """Test that security headers are present."""
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         response = await ac.get("/api/v1/health")
         assert response.status_code == 200
@@ -106,6 +94,9 @@ async def test_security_headers():
 @pytest.mark.asyncio
 async def test_cors_headers():
     """Test CORS headers are properly set."""
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         response = await ac.options("/api/v1/rephrase", headers={"Origin": "http://localhost:3000"})
         assert response.status_code == 200

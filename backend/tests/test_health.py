@@ -1,11 +1,12 @@
 from httpx import AsyncClient, ASGITransport
 import pytest
-from app.main import app
-
-transport = ASGITransport(app=app)
 
 @pytest.mark.asyncio
 async def test_health():
+    # Import app inside test to ensure environment is set first
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         res = await ac.get("/api/v1/health")
     assert res.status_code == 200

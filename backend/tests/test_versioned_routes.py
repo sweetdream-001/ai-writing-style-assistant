@@ -1,15 +1,15 @@
 # tests/test_versioned_routes.py
 import pytest
 from httpx import AsyncClient, ASGITransport
-from app.main import app
-
-transport = ASGITransport(app=app)
 
 # Removed test_api_root - API root endpoint no longer exists after removing legacy endpoints
 
 @pytest.mark.asyncio
 async def test_v1_health():
     """Test v1 health endpoint."""
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         res = await ac.get("/api/v1/health")
     assert res.status_code == 200
@@ -21,6 +21,9 @@ async def test_v1_health():
 @pytest.mark.asyncio
 async def test_v1_hello():
     """Test v1 hello endpoint."""
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         res = await ac.get("/api/v1/hello")
     assert res.status_code == 200
@@ -30,6 +33,9 @@ async def test_v1_hello():
 @pytest.mark.asyncio
 async def test_v1_version():
     """Test v1 version endpoint."""
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         res = await ac.get("/api/v1/version")
     assert res.status_code == 200
@@ -42,6 +48,9 @@ async def test_v1_version():
 @pytest.mark.asyncio
 async def test_v1_status():
     """Test v1 status endpoint."""
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         res = await ac.get("/api/v1/status")
     assert res.status_code == 200
@@ -56,6 +65,9 @@ async def test_v1_status():
 @pytest.mark.asyncio
 async def test_version_endpoints_structure():
     """Test that version endpoints have proper structure."""
+    from app.main import app
+    transport = ASGITransport(app=app)
+    
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         res = await ac.get("/api/v1/version")
         data = res.json()
