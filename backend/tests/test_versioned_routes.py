@@ -5,16 +5,7 @@ from app.main import app
 
 transport = ASGITransport(app=app)
 
-@pytest.mark.asyncio
-async def test_api_root():
-    """Test API root endpoint."""
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        res = await ac.get("/api/")
-    assert res.status_code == 200
-    data = res.json()
-    assert data["message"] == "AI Writing Style Assistant API"
-    assert "v1" in data["available_versions"]
-    assert data["current_version"] == "v1"
+# Removed test_api_root - API root endpoint no longer exists after removing legacy endpoints
 
 @pytest.mark.asyncio
 async def test_v1_health():
@@ -60,19 +51,7 @@ async def test_v1_status():
     assert "rate_limit" in data
     assert "features" in data
 
-@pytest.mark.asyncio
-async def test_legacy_endpoints_still_work():
-    """Test that legacy endpoints still work."""
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        # Test legacy health
-        res = await ac.get("/api/health")
-        assert res.status_code == 200
-        
-        # Test legacy hello
-        res = await ac.get("/api/hello")
-        assert res.status_code == 200
-        data = res.json()
-        assert "legacy endpoint" in data["message"]
+# Removed test_legacy_endpoints_still_work - Legacy endpoints no longer exist after cleanup
 
 @pytest.mark.asyncio
 async def test_version_endpoints_structure():
