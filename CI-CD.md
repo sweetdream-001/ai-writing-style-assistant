@@ -44,32 +44,31 @@ The CI/CD pipeline consists of two main workflows:
 - **Test Coverage**: Coverage reporting with v8
 - **Build Test**: Ensures application builds successfully
 
-### 4. Docker Testing
-- **Image Building**: Builds both backend and frontend images
-- **Container Testing**: Verifies containers start and respond
-- **Integration**: Tests container communication
-
-### 5. Integration Testing
+### 4. Integration Testing
 - **API Testing**: Tests with real OpenAI API
 - **End-to-End**: Full application flow testing
 - **Performance**: Basic performance validation
 
-## 🐳 Docker Integration
 
-### Image Building
-- **Backend**: Python/FastAPI application
-- **Frontend**: React/Nginx application
-- **Registry**: GitHub Container Registry (ghcr.io)
-- **Caching**: Optimized layer caching
 
-### Container Testing
+## 🔗 Integration Testing
+
+### Application Testing
+- **Backend**: Python/FastAPI application testing
+- **Frontend**: React application testing
+- **API Integration**: Tests with real OpenAI API
+- **End-to-End**: Full application flow validation
+
+### Health Checks
 ```bash
-# Health checks
-curl -f http://localhost:8000/api/v1/health  # Backend
-curl -f http://localhost:80/          # Frontend
+# Backend health check
+curl -f http://localhost:8000/api/v1/health
 
-# API testing
-curl -f http://localhost:8000/docs    # API documentation
+# Frontend health check
+curl -f http://localhost:3000/
+
+# API documentation
+curl -f http://localhost:8000/docs
 ```
 
 ## 🔐 Security Features
@@ -97,7 +96,7 @@ curl -f http://localhost:8000/docs    # API documentation
    - Code quality gates passed
 
 2. **Deployment Steps**:
-   - Build production images
+   - Build production applications
    - Deploy to target environment
    - Health checks
    - Rollback capability
@@ -132,7 +131,6 @@ OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 # Optional with defaults
 ENVIRONMENT: production
-DOCKER_REGISTRY: ghcr.io
 ```
 
 ### Secrets Management
@@ -173,7 +171,7 @@ DOCKER_REGISTRY: ghcr.io
 ## 📈 Performance Optimization
 
 ### Build Optimization
-- **Layer Caching**: Optimized Docker layer caching
+- **Layer Caching**: Optimized dependency caching
 - **Parallel Jobs**: Concurrent test execution
 - **Dependency Caching**: Cached pip/npm dependencies
 

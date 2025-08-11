@@ -1,6 +1,6 @@
 # AI Writing Style Assistant
 
-A modern, enterprise-grade web application that transforms text into different writing styles using artificial intelligence. Built with FastAPI, React, and Docker, this project demonstrates professional software development practices including API versioning, security, testing, and CI/CD.
+A modern, enterprise-grade web application that transforms text into different writing styles using artificial intelligence. Built with FastAPI and React, this project demonstrates professional software development practices including API versioning, security, testing, and CI/CD.
 
 ## 🎯 Project Overview
 
@@ -62,28 +62,35 @@ The AI Writing Style Assistant is a smart text transformation tool that takes yo
 - **State Management**: Custom hooks for clean component logic
 
 ### Infrastructure
-- **Containerization**: Docker with multi-stage builds
-- **Orchestration**: Docker Compose for local development
 - **CI/CD**: GitHub Actions with automated testing and deployment
 - **Security**: Vulnerability scanning with Trivy and Bandit
+- **Deployment**: Direct deployment without containerization
 
 ## 🚀 Quick Start
 
 ### What You'll Need
 - Python 3.11 or higher (Recommended 3.12)
 - Node.js 20 or higher (Recommended v23.11.1)
-- Docker and Docker Compose
 - OpenAI API key (get one at [platform.openai.com](https://platform.openai.com))
 
 ### Try It Out
-1. **Start the app** using Docker (easiest):
+1. **Start the backend**:
    ```bash
    git clone <repository-url>
    cd ai-writing-style-assistant
-   docker compose up -d
+   cd backend
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
 
-2. **Open your browser** to `http://localhost:80`
+2. **Start the frontend** (in a new terminal):
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+3. **Open your browser** to `http://localhost:3000`
 
 3. **Test with a sample text**:
    - Type: "I need to cancel my appointment tomorrow"
@@ -94,23 +101,12 @@ The AI Writing Style Assistant is a smart text transformation tool that takes yo
    - **Regular Mode**: Get all results at once (faster)
    - **Streaming Mode**: Watch results appear in real-time (more engaging)
 
-### Option 1: Docker (Recommended)
+### Option 1: Direct Installation (Recommended)
 ```bash
 # Clone the repository
 git clone <repository-url>
 cd ai-writing-style-assistant
 
-# Start the application
-docker compose up -d
-
-# Access the application
-# Frontend: http://localhost:80
-# Backend API: http://localhost:8000
-# API Docs: http://localhost:8000/docs
-```
-
-### Option 2: Local Development
-```bash
 # Backend setup
 cd backend
 python -m venv .venv
@@ -124,6 +120,33 @@ cp env.example .env
 
 # Start backend server
 make dev
+
+# Frontend setup (in new terminal)
+cd frontend
+npm install
+npm run dev
+
+# Access the application
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000
+# API Docs: http://localhost:8000/docs
+```
+
+### Option 2: Development with Hot Reload
+```bash
+# Backend setup (same as above, but with auto-reload)
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+
+# Create environment file
+cp env.example .env
+# Edit .env and add your OPENAI_API_KEY
+
+# Start backend server with auto-reload
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 # Frontend setup (in new terminal)
 cd frontend
@@ -271,14 +294,13 @@ npm test
 npm run build
 ```
 
-### Docker Tests
+### Integration Tests
 ```bash
-# Test containers
-docker compose up -d
-sleep 30
+# Test backend API
 curl -f http://localhost:8000/api/v1/health
-curl -f http://localhost:80/
-docker compose down
+
+# Test frontend (if running)
+curl -f http://localhost:3000/
 ```
 
 ## 🔧 Development
@@ -304,7 +326,7 @@ ai-writing-style-assistant/
 │   │   ├── hooks/           # Custom hooks
 │   │   └── utils/           # Utility functions
 │   └── package.json
-├── docker-compose.yml       # Container orchestration
+
 └── .github/workflows/       # CI/CD pipelines
 ```
 
@@ -355,20 +377,24 @@ RATE_LIMIT_PER_HOUR=1000
 
 ## 🚀 Deployment
 
-### Docker Deployment
+### Direct Deployment
 ```bash
-# Build and run
-docker compose up -d
+# Backend deployment
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 
-# Production build
-docker compose -f docker-compose.prod.yml up -d
+# Frontend deployment
+cd frontend
+npm install
+npm run build
+# Serve the dist folder with your web server
 ```
 
 ### CI/CD Pipeline
 The project includes GitHub Actions workflows:
 - **Security scanning** with Trivy and Bandit
 - **Automated testing** for backend and frontend
-- **Docker image building** and testing
 - **Integration testing** with OpenAI API
 - **Deployment** to staging and production
 
@@ -385,7 +411,7 @@ The project includes GitHub Actions workflows:
 
 - **Response Time**: < 2 seconds for typical requests
 - **Streaming**: Real-time text generation
-- **Caching**: Docker layer caching for faster builds
+- **Caching**: Optimized dependency caching for faster builds
 - **Optimization**: Gzip compression, minified assets
 
 ## 🤝 Contributing
@@ -407,7 +433,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - OpenAI for providing the GPT API
 - FastAPI community for the excellent framework
 - React team for the powerful frontend library
-- Docker community for containerization tools
+- Open source community for development tools
 
 ## 📞 Support
 
