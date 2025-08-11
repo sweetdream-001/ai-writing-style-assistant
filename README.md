@@ -34,8 +34,8 @@ This application allows users to input text and receive AI-generated versions in
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.11 or higher
-- Node.js 20 or higher
+- Python 3.11 or higher (Recommended 3.12)
+- Node.js 20 or higher (Reconmended v23.11.1)
 - Docker and Docker Compose
 - OpenAI API key
 
@@ -159,6 +159,15 @@ cd frontend
 
 # Linting
 npm run lint
+
+# Run tests
+npm run test:run
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm test
 
 # Build test
 npm run build

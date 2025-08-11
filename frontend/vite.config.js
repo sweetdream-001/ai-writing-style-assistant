@@ -40,5 +40,12 @@ export default defineConfig({
   // Vite 7 automatic content detection
   css: {
     devSourcemap: true
+  },
+  // Test configuration
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.js'],
+    css: true
   }
 })

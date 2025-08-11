@@ -38,8 +38,10 @@ The CI/CD pipeline consists of two main workflows:
 - **Coverage**: Code coverage reporting
 
 ### 3. Frontend Testing
-- **Node.js Setup**: Uses Node.js 18
+- **Node.js Setup**: Uses Node.js 23
 - **Linting**: ESLint code quality checks
+- **Unit Tests**: Vitest with React Testing Library
+- **Test Coverage**: Coverage reporting with v8
 - **Build Test**: Ensures application builds successfully
 
 ### 4. Docker Testing
