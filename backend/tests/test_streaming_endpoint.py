@@ -29,7 +29,7 @@ async def test_streaming_endpoint():
             try:
                 async with client.stream(
                     "POST", 
-                    "http://localhost:8000/api/rephrase-stream",
+                    "http://localhost:8000/api/v1/rephrase-stream",
                     json={"text": text},
                     timeout=30.0
                 ) as response:
