@@ -59,7 +59,7 @@ dev:
 
 health:
 	@echo "🔍 Checking server health..."
-	@curl -s http://localhost:8000/health | grep -q "ok" && \
+	@curl -s http://localhost:8000/api/v1/health | grep -q "ok" && \
 		echo "✅ Server is running!" || \
 		echo "❌ Server is not responding (make sure it's running with 'make dev')"
 

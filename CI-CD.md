@@ -63,7 +63,7 @@ The CI/CD pipeline consists of two main workflows:
 ### Container Testing
 ```bash
 # Health checks
-curl -f http://localhost:8000/health  # Backend
+curl -f http://localhost:8000/api/v1/health  # Backend
 curl -f http://localhost:80/          # Frontend
 
 # API testing

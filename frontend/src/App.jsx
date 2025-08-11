@@ -12,12 +12,12 @@ function App() {
   const checkConnection = async () => {
     try {
       // Try health endpoint first (faster)
-      const healthRes = await axios.get("http://localhost:8000/health", { timeout: 3000 });
+      const healthRes = await axios.get("http://localhost:8000/api/v1/health", { timeout: 3000 });
       
       if (healthRes.data.status === "ok") {
         // Health is good, get the hello message
         try {
-          const helloRes = await axios.get("http://localhost:8000/hello", { timeout: 3000 });
+          const helloRes = await axios.get("http://localhost:8000/api/v1/hello", { timeout: 3000 });
           setBackendMessage(helloRes.data.message);
           setConnectionStatus("connected");
         } catch {

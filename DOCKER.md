@@ -40,7 +40,7 @@ docker-compose logs -f
 ### Services
 1. **Backend** (`backend`): FastAPI application
    - Port: 8000
-   - Health check: `/health`
+   - Health check: `/api/v1/health`
    - Environment: Production
 
 2. **Frontend** (`frontend`): React application served by Nginx
@@ -128,7 +128,7 @@ docker-compose down -v
 ## 🔍 Monitoring
 
 ### Health Checks
-- **Backend**: `curl http://localhost:8000/health`
+- **Backend**: `curl http://localhost:8000/api/v1/health`
 - **Frontend**: `curl http://localhost:80/`
 
 ### Logs
@@ -192,7 +192,7 @@ docker stats
    docker network inspect ai-writing-network
    
    # Test inter-service communication
-   docker-compose exec frontend wget -qO- http://backend:8000/health
+   docker-compose exec frontend wget -qO- http://backend:8000/api/v1/health
    ```
 
 ### Debug Mode

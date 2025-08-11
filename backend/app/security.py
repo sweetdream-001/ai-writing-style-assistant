@@ -73,11 +73,11 @@ def validate_api_key(api_key: str) -> bool:
     if not api_key:
         return False
     
-    # Basic OpenAI API key validation (starts with 'sk-' and has reasonable length)
-    if not api_key.startswith("sk-"):
+    # Basic OpenAI API key validation (starts with 'sk-' or 'sk-proj-' and has reasonable length)
+    if not (api_key.startswith("sk-") or api_key.startswith("sk-proj-")):
         return False
     
-    if len(api_key) < 20 or len(api_key) > 100:
+    if len(api_key) < 20 or len(api_key) > 200:
         return False
     
     return True

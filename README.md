@@ -51,7 +51,7 @@ docker compose up -d
 # Access the application
 # Frontend: http://localhost:80
 # Backend API: http://localhost:8000
-# API Docs: http://localhost:8000/api/v1/docs
+# API Docs: http://localhost:8000/docs
 ```
 
 ### Option 2: Local Development
@@ -78,7 +78,7 @@ npm run dev
 # Access the application
 # Frontend: http://localhost:3000
 # Backend: http://localhost:8000
-# API Docs: http://localhost:8000/api/v1/docs
+# API Docs: http://localhost:8000/docs
 ```
 
 ## 📚 API Documentation
