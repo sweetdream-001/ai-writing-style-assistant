@@ -58,11 +58,11 @@ class Settings:
         return self.environment == "development"
     
     @property
-    def docs_url(self) -> str:
+    def docs_url(self) -> str | None:
         return "/docs" if self.is_development else None
     
     @property
-    def redoc_url(self) -> str:
+    def redoc_url(self) -> str | None:
         return "/redoc" if self.is_development else None
 
 @lru_cache()

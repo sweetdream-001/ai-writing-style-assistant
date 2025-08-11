@@ -2,8 +2,8 @@
 import time
 import asyncio
 from collections import defaultdict
-from typing import Dict, Tuple
-from fastapi import Request, HTTPException
+from typing import Dict
+from fastapi import Request
 
 class RateLimiter:
     def __init__(self, requests_per_minute: int = 60, requests_per_hour: int = 1000):

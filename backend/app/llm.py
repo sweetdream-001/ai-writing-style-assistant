@@ -71,7 +71,10 @@ async def rephrase(text: str) -> Dict[str, str]:
             temperature=0.7,
             max_tokens=settings.max_tokens,
         )
-        data = json.loads(resp.choices[0].message.content)
+        content = resp.choices[0].message.content
+        if not content:
+            raise LLMError("Model returned empty response.")
+        data = json.loads(content)
         return _ensure_payload_shape(data)
     except openai.APITimeoutError as e:
         raise LLMError("The LLM request timed out.") from e

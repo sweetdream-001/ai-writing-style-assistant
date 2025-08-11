@@ -76,5 +76,5 @@ async def rephrase_stream_endpoint(
                 "Connection": "keep-alive",
             }
         )
-    except LLMError as e:
+    except LLMError:
         raise HTTPException(status_code=500, detail="LLM call failed")
