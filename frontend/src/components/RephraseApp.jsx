@@ -16,11 +16,11 @@ export function RephraseApp() {
         setIsStreamingMode,
         isActivelyStreaming,
         streamingResult,
-        
+
         // Functions to handle user actions
         onProcess,
         onCancel,
-        
+
         // Helper values
         disabled,
         isProcessing
@@ -37,12 +37,13 @@ export function RephraseApp() {
                     <h1 className="hero-title">
                         Transform Your Writing
                         <span className="hero-gradient"> with Style</span>
+                        <span className="hero-gradient"> For Education</span>
                     </h1>
                     <p className="hero-description">
-                        Instantly rephrase your text in multiple styles. Professional, casual, polite, 
+                        Instantly rephrase your text in multiple styles. Professional, casual, polite,
                         or social media-ready. Your words, perfected by AI.
                     </p>
-                    
+
                     {/* Stats or Features */}
                     <div className="hero-stats">
                         <div className="stat-item">
